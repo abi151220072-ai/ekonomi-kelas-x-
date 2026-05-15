@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modul Ekonomi Spektra - Kelas X</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            background-color: #f0f4f8;
+            color: #2c3e50;
+            display: flex;
+            min-height: 100vh;
+        }
+        /* Navigasi Samping (Sidebar) */
+        nav {
+            width: 300px;
+            background-color: #1e293b;
+            color: white;
+            padding: 25px 15px;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            border-right: 4px solid #38bdf8;
+        }
+        nav h3 {
+            text-align: center;
+            margin-bottom: 25px;
+            font-size: 1.2rem;
+            color: #38bdf8;
+            border-bottom: 2px solid #334155;
+            padding-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .nav-btn {
+            display: block;
+            width: 100%;
+            padding: 14px 15px;
+            background: none;
+            border: none;
+            color: #94a3b8;
+            text-align: left;
+            font-size: 0.95rem;
+            cursor: pointer;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            transition: all 0.3s ease;
+        }
+        .nav-btn:hover {
+            background-color: #334155;
+            color: #38bdf8;
+            padding-left: 20px;
+        }
+        .nav-btn.active {
+            background-color: #0284c7;
+            color: white;
+            font-weight: bold;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+        }
+        /* Area Konten Utama */
+        main {
+            margin-left: 300px;
+            flex: 1;
+            padding: 40px;
+            background-color: #f8fafc;
+        }
+        .page {
+            display: none;
+            background: #fff;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.05);
+            animation: fadeIn 0.4s ease-out;
+        }
+        .page.active {
+            display: block;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        /* Tipografi & Elemen Konten */
+        h1 {
+            color: #0f172a;
+            margin-bottom: 15px;
+            font-size: 2.2rem;
+            border-bottom: 4px solid #0284c7;
+            padding-bottom: 10px;
+            display: inline-block;
+        }
+        h2 {
+            color: #0284c7;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 8px;
+            font-size: 1.6rem;
+        }
+        h3 {
+            color: #0d9488;
+            margin: 25px 0 12px 0;
+            font-size: 1.25rem;
+        }
+        p {
+            margin-bottom: 15px;
+            color: #475569;
+            text-align: justify;
+        }
+        ul {
+            padding-left: 25px;
+            margin-bottom: 20px;
+        }
+        li {
+            margin-bottom: 10px;
+            color: #475569;
+        }
+        strong {
+            color: #0f172a;
+        }
+        /* Komponen Khusus (Rumus / Definisi) */
+        .formula-box {
+            background-color: #f0fdf4;
+            border: 1px solid #bbf7d0;
+            border-left: 6px solid #16a34a;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            font-family: 'Courier New', Courier, monospace;
+        }
+        .highlight-box {
+            background-color: #f0f9ff;
+            border: 1px solid #bae6fd;
+            border-left: 6px solid #0284c7;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        /* Pengaturan Tabel */
+        .table-container {
+            max-width: 100%;
+            border: 1px solid #ddd;
+            overflow-x: auto; 
+            scroll-snap-type: x mandatory;
+            
+        }
+       
+          table {
+    border-collapse: collapse;
+    width: 100%;
+    min-width: 420px; /* Memberi lebar minimal agar bisa dites gesernya */
+    table-layout: auto;
+  }
+
+  th, td {
+    padding: 10px;
+    border: 1px solid #ddd;
+    text-align: left;
+    background: white; /* Penting: agar kolom tidak transparan saat ditimpa */
+    word-wrap: break-word;
+    white-space: normal;
+    vertical-align: top;
+    scroll-snap-align: start;
+  }
+
+        /* Tombol Navigasi Bawah (Baru) */
+        .nav-footer {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 2px solid #e2e8f0;
+        }
+        .page-btn {
+            padding: 10px 20px;
+            background-color: #0284c7;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background 0.2s;
+        }
+        .page-btn:hover {
+            background-color: #0369a1;
+        }
+        .page-btn:disabled {
+            background-color: #cbd5e1;
+            color: #94a3b8;
+            cursor: not-allowed;
+        }
+        /* Responsif */
+        @media (max-width: 992px) {
+            body { flex-direction: column; }
+            nav { width: 100%; height: auto; position: relative; border-right: none; border-bottom: 4px solid #38bdf8; }
+            main { margin-left: 0; padding: 20px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navigasi Samping -->
+    <nav>
+        <h3>Materi Ekonomi</h3>
+        <button class="nav-btn active" onclick="showPage(0)">Halaman Depan</button>
+        <button class="nav-btn" onclick="showPage(1)">1. Permintaan & Penawaran</button>
+        <button class="nav-btn" onclick="showPage(2)">2. Elastisitas Pasar</button>
+        <button class="nav-btn" onclick="showPage(3)">3. Sistem Perbankan</button>
+        <button class="nav-btn" onclick="showPage(4)">4. Otoritas Jasa Keuangan</button>
+        <button class="nav-btn" onclick="showPage(5)">5. Industri Asuransi</button>
+        <button class="nav-btn" onclick="showPage(6)">6. Jasa Keuangan Non-Bank</button>
+    </nav>
+
+    <!-- Konten Utama -->
+    <main>
+        <!-- INDEX 0: HALAMAN DEPAN -->
+        <div class="page active">
+            <h1>Modul Integrasi Ekonomi</h1>
+            <p style="font-weight: 500; color: #64748b;">Pendalaman Materi Mekanisme Pasar & Otoritas Sektor Keuangan Nasional</p>
+            <div class="highlight-box">
+                <p>Modul interaktif ini merangkum materi esensial ekonomi semester ganjil/genap kelas X secara terfokus. Silakan klik menu di samping kiri untuk menjelajahi bab yang diinginkan secara instan.</p>
+                <p><strong>Cakupan Pembelajaran:</strong> Teori pembentukan harga, matematika elastisitas, regulasi lembaga keuangan perbankan, pengawasan OJK, tata kelola risiko asuransi, serta fungsi operasional IKNB (Industri Keuangan Non-Bank).</p>
+            </div>
+            
+            <div class="nav-footer">
+                <button class="page-btn" disabled>Sebelumnya</button>
+                <button class="page-btn" onclick="nextPage()">Berikutnya &raquo;</button>
+            </div>
+        </div>
+
+        <!-- INDEX 1: PERMINTAAN & PENAWARAN -->
+        <div class="page">
+            <h2>Mekanisme Pasar: Permintaan & Penawaran</h2>
+            <h3>A. Teori Permintaan (Demand)</h3>
+            <p>Permintaan adalah jumlah barang/jasa yang ingin dan mampu dibeli oleh konsumen pada berbagai tingkat harga dan dalam periode waktu tertentu.</p>
+            <ul>
+                <li><strong>Hukum Permintaan:</strong> Hubungan berbanding terbalik. Jika harga suatu barang naik (P&uarr;), maka jumlah barang yang diminta akan turun (Q&darr;), dengan syarat <em>ceteris paribus</em>.</li>
+            </ul>
+
+            <h3>B. Teori Penawaran (Supply)</h3>
+            <p>Penawaran adalah jumlah barang/jasa yang ditawarkan atau dijual oleh produsen pada berbagai tingkat harga.</p>
+            <ul>
+                <li><strong>Hukum Penawaran:</strong> Hubungan berbanding lurus. Jika harga suatu barang naik (P&uarr;), maka jumlah barang yang ditawarkan produsen akan ikut naik (Q&uarr;), <em>ceteris paribus</em>.</li>
+            </ul>
+
+            <h3>C. Harga Keseimbangan (Ekuilibrium)</h3>
+            <p>Kondisi di mana kekuatan permintaan bertemu dengan kekuatan penawaran di pasar secara seimbang. Terjadi saat <strong>Qd = Qs</strong> atau <strong>Pd = Ps</strong>.</p>
+            <h2>Rumus-rumus nya:</h2>
+            <img src="https://imgv2-2-f.scribdassets.com/img/document/763145250/original/84e6145759/1?v=1" width="100%" height="20%">
+
+            
+            <div class="nav-footer">
+                <button class="page-btn" onclick="prevPage()">&laquo; Sebelumnya</button>
+                <button class="page-btn" onclick="nextPage()">Berikutnya &raquo;</button>
+            </div>
+        </div>
+
+        <!-- INDEX 2: ELASTISITAS -->
+        <div class="page">
+            <h2>Teori Elastisitas Permintaan & Penawaran</h2>
+            <p>Elastisitas adalah derajat kepekaan perubahan jumlah barang yang diminta atau ditawarkan akibat adanya perubahan harga barang tersebut.</p>
+            
+            <div class="formula-box">
+                <strong>Rumus Koefisien Elastisitas (E):</strong><br>
+                E = (&Delta;Q / &Delta;P) x (P / Q)
+            </div>
+
+            <h3>Jenis-Jenis Koefisien Elastisitas</h3>
+           
+               <div class="table-container">
+                   <table>
+                <thead>
+                    <tr>
+                        <th>Nilai Koefisien</th>
+                        <th>Sifat Elastisitas</th>
+                        <th>Contoh</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td><strong>E > 1</strong></td><td>Elastis</td><td>Pakaian Bermerek: Jika harga tas atau sepatu mewah naik 20%, konsumen dengan mudah menunda pembelian atau beralih ke merek lain, sehingga penjualannya turun lebih dari 20%.</td></tr>
+                    <tr><td><strong>E < 1</strong></td><td>Inelastis</td><td>Beras atau Makanan Pokok: Jika harga beras naik 15%, masyarakat tetap akan membelinya karena merupakan kebutuhan makan sehari-hari, sehingga konsumsinya hanya turun sedikit (misal 2%).</td></tr>
+                    <tr><td><strong>E = 1</strong></td><td>Unitary</td><td>Produk Fashion Tren Musiman: Penjual menurunkan harga baju model lama sebesar 20% untuk menghabiskan stok, dan jumlah baju yang terjual meningkat tepat 20%.</td></tr>
+                    <tr><td><strong>E = ∞</strong></td><td>Elastis Sempurna</td><td>Bahan Bakar Minyak (BBM) Subsidi: Pada tingkat harga yang sudah dipatok pemerintah, masyarakat akan membeli berapa pun kuantitas yang tersedia.</td></tr>
+                    <tr><td><strong>E = 0</strong></td><td>Inelastis Sempurna</td><td>Obat-obatan Penyelamat Nyawa (seperti Insulin): Penderita diabetes tetap membutuhkan dosis insulin yang sama setiap bulan, tidak peduli harganya melonjak tinggi atau turun drastis.</td></tr>
+                </tbody>
+            </table>
+            </div>
+            <strong><h2>rumus Elastisitas Penawaran</h2></strong>
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSFSr6TxIZIRFAGZC5skpPZNnpB6KWT5p8Gf51uMPpUVQ&s=10" width="85%" height="10%"
+            
+            <div class="nav-footer">
+                <button class="page-btn" onclick="prevPage()">&laquo; Sebelumnya</button>
+                <button class="page-btn" onclick="nextPage()">Berikutnya &raquo;</button>
+            </div>
+        </div>
+
+        <!-- INDEX 3: PERBANKAN -->
+        <div class="page">
+            <h2>Sistem Perbankan di Indonesia</h2>
+            
+            <p>Bank adalah badan usaha yang menghimpun dana dari masyarakat dalam bentuk simpanan dan menyalurkannya kembali dalam bentuk kredit.</p>
+            
+            <h2>Jenis-Jenis Bank</h2>
+            <h3>1. Bank Sentral (Bank Indonesia)</h3>
+            <p>Lembaga negara independen yang bertugas mencapai dan memelihara kestabilan nilai rupiah melalui kebijakan moneter.</p>
+
+            <h3>2. Bank Umum (Komersial)</h3>
+            <p>Bank yang melaksanakan kegiatan usaha konvensional atau syariah yang memberikan jasa dalam lalu lintas pembayaran.</p>
+            
+            <h3>3. Bank Perkreditan Rakyat (BPR)</h3>
+            <p> Bank yang menerima simpanan hanya dalam bentuk deposito berjangka, tabungan, atau bentuk lainnya, namun tidak memberikan jasa dalam lalu lintas pembayaran.</p>
+            
+            <h2>Sistem dan Alat Pembayaran</h2>
+            
+            <li>Sistem Pembayaran: Sistem yang mencakup seperangkat aturan, lembaga, dan mekanisme untuk memindahkan dana guna memenuhi kewajiban dari suatu kegiatan ekonomi.</li>
+            
+            <li>Alat Pembayaran Tunai: Uang kartal (uang kertas dan logam).</li>
+            
+            <li>Alat Pembayaran Nontunai: Berbasis kertas (cek, bilyet giro), berbasis kartu (ATM, kartu kredit), dan berbasis elektronik (e-wallet, Qris).</li>
+            
+            <h2>Prinsip Usaha Bank</h2>
+            
+            <li>Bank Konvensional: Menggunakan sistem bunga.</li>
+            
+            <li>Bank Syariah: Menggunakan prinsip bagi hasil, jual beli, atau sewa, tanpa riba.</li>
+            
+            <div class="nav-footer">
+                <button class="page-btn" onclick="prevPage()">&laquo; Sebelumnya</button>
+                <button class="page-btn" onclick="nextPage()">Berikutnya &raquo;</button>
+            </div>
+        </div>
+
+        <!-- INDEX 4: OJK -->
+        <div class="page">
+            <h2>Otoritas Jasa Keuangan (OJK)</h2>
+            <p>OJK adalah lembaga negara independen yang memiliki fungsi, tugas, dan wewenang pengaturan, pengawasan, pemeriksaan, dan penyidikan di sektor jasa keuangan.</p>
+            
+            <div class="highlight-box">
+                <strong>UU No. 21 Tahun 2011:</strong> Dasar hukum pengalihan tugas pengawasan dari BI dan Bapepam-LK ke OJK.
+            </div>
+
+            <h3>Tujuan Utama OJK</h3>
+            <ul>
+                <li>Sektor jasa keuangan terselenggara secara teratur, adil, transparan, dan akuntabel.</li>
+                <li>Melindungi kepentingan konsumen dari kejahatan finansial (investasi bodong/pinjol ilegal).</li>
+                <li>Menjaga stabilitas sektor keuangan secara terintegrasi.</li>
+                <li>Memastikan pinjaman online (pinjol) terdaftar dan berizin agar legal.</li>
+                <strong>Layanan Utama OJK</strong>
+                <li>Kontak OJK 157: Layanan konsumen untuk informasi dan pengaduan melalui telepon 157 atau WhatsApp 081157157157.</li>
+                <li>SLIK (Sistem Layanan Informasi Keuangan): Layanan informasi debitur (dulu BI Checking) yang dapat diakses secara online.</li>
+                <li>Cek Legalitas: Mengecek legalitas pinjol atau perusahaan keuangan melalui situs <a href="https://www.ojk.go.id/id/Default.aspx" target="_blank" rel="noopener noreferrer">www.ojk.go.id</a>
+  </li>
+            </ul>
+            
+            <div class="nav-footer">
+                <button class="page-btn" onclick="prevPage()">&laquo; Sebelumnya</button>
+                <button class="page-btn" onclick="nextPage()">Berikutnya &raquo;</button>
+            </div>
+        </div>
+
+        <!-- INDEX 5: ASURANSI -->
+        <div class="page">
+            <h2>Industri Perasuransian</h2>
+            <p>Asuransi adalah perjanjian antara perusahaan asuransi (penanggung) dan pemegang polis (tertanggung) untuk memberikan penggantian atas risiko kerugian.</p>
+            
+            <h3>Unsur-Unsur Utama Asuransi</h3>
+            <ul>
+                <li><strong>Premi:</strong>  Uang iuran yang wajib dibayarkan oleh nasabah kepada perusahaan asuransi setiap bulan atau setiap tahun.</li>
+                <li><strong>Polis asuransi:</strong> Surat atau dokumen perjanjian tertulis yang sah dan mengikat antara penanggung dan tertanggung.</li>
+                <li><strong>Klaim:</strong> Pengajuan resmi dari nasabah kepada perusahaan asuransi untuk meminta pembayaran ganti rugi atas risiko yang terjadi sesuai isi polis.</li>
+            </ul>
+            <h3>Fungsi Asuransi</h3>
+            <ul>
+                <li><strong>Fungsi Primer (Utama):</strong> Mengalihkan risiko (risk transfer), membagi risiko secara adil, dan memberikan kepastian finansial dari ketidakpastian masa depan.</li>
+                <li><strong>Fungsi Sekunder:</strong> Mendorong pertumbuhan usaha, mencegah kerugian ekonomi, serta mengumpulkan dana masyarakat untuk diinvestasikan kembali ke perekonomian</li>
+            </ul>
+            <h3> Jenis-Jenis Asuransi</h3>
+            <ul>
+            <li>Berdasarkan Pengelolaan Dana:
+            
+            Asuransi Konvensional: Menggunakan prinsip jual beli risiko berbasis bunga/investasi umum.
+            
+            Asuransi Syariah: Menggunakan prinsip tolong-menolong (ta'awun) dan hibah (tabarru') tanpa unsur judi, ketidakpastian, atau riba</li>
+            <li>Berdasarkan Tujuan Operasional:
+            
+            Asuransi Komersial: Dijalankan oleh perusahaan swasta/BUMN demi mencari keuntungan finansial.
+            
+            Asuransi Sosial: Disediakan oleh pemerintah untuk jaminan sosial seluruh masyarakat (contoh: BPJS Kesehatan dan BPJS Ketenagakerjaan).</li>
+            <li>Berdasarkan Objek yang Dijamin:
+            
+            Asuransi Jiwa: Menanggung risiko finansial akibat kematian atau kelangsungan hidup seseorang.
+            
+            Asuransi Umum/Kerugian: Menanggung kerusakan fisik harta benda (contoh: asuransi kebakaran rumah, kendaraan bermotor).</li>
+            </ul>
+            <h3>Prinsip Dasar Asuransi</h3>
+            <p>Perusahaan asuransi hanya akan membayar klaim jika memenuhi prinsip ekonomi berikut:</p>
+            <ul>
+                <li>Insurable Interest: Nasabah memiliki kepentingan keuangan langsung atas objek yang diasuransikan (misal: rumah milik sendiri, bukan milik tetangga).</li>
+                
+                <li>Utmost Good Faith: Kedua belah pihak harus jujur dan terbuka dalam memberikan informasi dokumen tanpa ada yang disembunyikan.</li>
+                
+                <li>Indemnity: Mekanisme ganti rugi disesuaikan dengan nilai kerugian riil, tidak boleh mencari keuntungan dari asuransi.</li>
+            </ul>
+            
+            <div class="nav-footer">
+                <button class="page-btn" onclick="prevPage()">&laquo; Sebelumnya</button>
+                <button class="page-btn" onclick="nextPage()">Berikutnya &raquo;</button>
+            </div>
+        </div>
+
+        <!-- INDEX 6: LKBB -->
+        <div class="page">
+            <h2>Lembaga Keuangan Bukan Bank (LKBB)</h2>
+            <p>LKBB adalah badan usaha yang melakukan kegiatan di bidang keuangan dengan menghimpun dana dari masyarakat dan menyalurkannya kembali, tetapi tidak diperbolehkan menerima simpanan dalam bentuk giro, tabungan, dan deposito seperti bank umum. Semua LKBB di Indonesia diawasi langsung oleh Otoritas Jasa Keuangan (OJK).</p>
+            <ul>
+                <h2>Jenis-Jenis LKBB beserta Fungsinya</h2>
+                
+                <strong>1. Perusahaan Asuransi</strong
+                <li>Fungsi: Mengalihkan dan membagikan risiko finansial yang mungkin terjadi di masa depan melalui pembayaran premi</li>
+                
+                <li>Contoh: PT Jasa Raharja, BPJS Kesehatan, BPJS Ketenagakerjaan, dan perusahaan asuransi swasta.</li>
+                
+                <strong>2. Pegadaian (Perusahaan Pergadaian)</strong>
+                <li>Fungsi: Memberikan pinjaman dana tunai kepada masyarakat dengan jaminan barang bergerak (gadai) untuk mencegah masyarakat terjerat rentenir.</li>
+                <li>Slogan Terkenal: "Mengatasi Masalah Tanpa Masalah.</li>
+                <li>Contoh: PT Pegadaian (Persero).</li>
+                <strong>3. Dana Pensiun</strong>
+                <li>Fungsi: Menghimpun dana dari iuran gaji karyawan selama masa kerja, lalu mengembalikannya dalam bentuk tunjangan bulanan saat karyawan tersebut pensiun</li>
+                <li>Contoh: PT Taspen (untuk PNS), PT Asabri (untuk TNI/Polri), dan BPJS Ketenagakerjaan Jaminan Hari Tua (JHT)</li>
+                
+                <strong>4. Perusahaan Pembiayaan (Leasing)</strong>
+                <li>Fungsi: Menyediakan pembiayaan barang modal atau barang konsumsi kepada nasabah yang ingin membeli secara mengangsur/kredit.</li>
+                <li>Contoh: PT Adira Dinamika Multi Finance, PT Federal International Finance (FIF).</li>
+                
+                <strong>5. Perusahaan Modal Ventura (Ventura Capital)</strong>
+                <li>Fungsi: Memberikan investasi atau penyertaan modal kepada perusahaan rintisan (startup) atau UMKM yang potensial tetapi kekurangan modal.</li>
+                <li>Karakteristik: Kemitraan bersifat sementara sampai perusahaan tersebut mandiri.</li>
+                
+                <strong>6. Koperasi Simpan Pinjam (KSP)</strong>
+                <li>Fungsi: Menghimpun dana dan memberikan pinjaman khusus untuk anggota koperasi berdasarkan asas kekeluargaan dan gotong royong.</li>
+                
+            </ul>
+            <h3>perbedaan bank dengan LKBB</h3>
+           <div class="table-container"> <table>
+                <tr>
+                    <th>Karakteristik</th>
+                    <th>bank</th>
+                    <th>klbb</th>
+                </tr>
+                <tr>
+                    <td>Penghimpunan Dana</td>
+                    <td>Langsung (Giro, Tabungan, Deposito)</td>
+                    <td>Tidak langsung (Premi, Iuran, Modal sendiri, Penerbitan surat berharga)</td>
+                </tr>
+                <tr>
+                    <td>Penyaluran Dana</td>
+                    <td>Kredit modal kerja, investasi, dan konsumsi</td>
+                    <td>Tujuan khusus (Modal ventura, Kredit barang, Jaminan gadai, Proteksi risiko</td>
+                </tr>
+                <tr>
+                    <td>Kemampuan Cetak Uang</td>
+                    <td>Dapat menciptakan uang giral</td>
+                    <td>idak dapat menciptakan uang giral</td>
+                </tr>
+            </table></div>
+            
+            <div class="nav-footer">
+                <button class="page-btn" onclick="prevPage()">&laquo; Sebelumnya</button>
+                <button class="page-btn" disabled>Berikutnya</button>
+            </div>
+        </div>
+    </main>
+
+    <!-- JavaScript Manajemen Halaman -->
+    <script>
+        let currentPageIndex = 0; // Halaman awal (index 0)
+        const pages = document.querySelectorAll('.page');
+        const buttons = document.querySelectorAll('.nav-btn');
+
+        function showPage(index) {
+            currentPageIndex = index;
+
+            // Sembunyikan semua halaman & matikan semua tombol menu
+            pages.forEach(page => page.classList.remove('active'));
+            buttons.forEach(btn => btn.classList.remove('active'));
+
+            // Tampilkan halaman & menu aktif sesuai indeks saat ini
+            pages[currentPageIndex].classList.add('active');
+            buttons[currentPageIndex].classList.add('active');
+
+            // Scroll otomatis kembali ke atas materi
+            window.scrollTo({top: 0, behavior: 'smooth'});
+        }
+
+        function nextPage() {
+            if (currentPageIndex < pages.length - 1) {
+                showPage(currentPageIndex + 1);
+            }
+        }
+
+        function prevPage() {
+            if (currentPageIndex > 0) {
+                showPage(currentPageIndex - 1);
+            }
+        }
+    </script>
+</body>
+</html>
